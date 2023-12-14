@@ -4,6 +4,8 @@ from vertexai.language_models import CodeChatModel
 import os
 from dotenv import load_dotenv
 
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "idyllic-kiln-407416-9360d6ff13ca.json"
+
 load_dotenv()
 PROJECT_ID = os.getenv('PROJECT_ID')
 LOCATION = os.getenv('LOCATION')
