@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
+    <!-- Include jQuery library -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+    <div id="chat">
+        <!-- Chat messages will be appended here -->
+    </div>
+    <input type="text" id="chat-input" placeholder="Type a message...">
+    <button id="send-button">Send</button>
+
+    <script>
+        $(document).ready(function () {
+            $('#send-button').on('click', function () {
+                var message = $('#chat-input').val();
+                $.ajax({
+                    url: '/chat',
+                    type: 'POST',
+                    data: JSON.stringify({ message: message }),
+                    contentType: 'application/json',
+                    success: function (response) {
+                        $('#chat').append('<li class="right">' + response.text + '</li>');
+                    }
+                });
+                $('#chat-input').val('');
+            });
+        });
+    </script>
+</body>
+</html>
