@@ -21,5 +21,3 @@ git clone https://github.com/mosesdaudu001/chatbot
 
 
 ![Header](static/chatbot-screen1.png)
-
-![Header](static/chatbot-screen2.png)
