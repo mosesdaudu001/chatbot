@@ -14,10 +14,6 @@ Follow the steps below to set up and run the chatbot app:
 
 Make sure you have Python installed on your system. You can download it from [python.org](https://www.python.org/).
 
-Clone this repository to your local machine:
-
-```bash
-git clone https://github.com/mosesdaudu001/chatbot
-
-
 ![Header](static/chatbot-screen1.png)
+
+![Header](static/chatbot-screen2.png)
