@@ -1,36 +1,53 @@
 from flask import Flask,render_template, request, jsonify
-import vertexai
-from vertexai.language_models import CodeChatModel
-from vertexai.preview.generative_models import GenerativeModel, Part
-
 import os
-from dotenv import load_dotenv
+import boto3
+import botocore
+import json 
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "idyllic-kiln-407416-9360d6ff13ca.json"
+bedrock_runtime = boto3.client('bedrock-runtime')
 
-load_dotenv()
-PROJECT_ID = os.getenv('PROJECT_ID')
-LOCATION = os.getenv('LOCATION')
-CODE_CHAT_MODEL = os.getenv('CODE_CHAT_MODEL')
+# If you'd like to try your own prompt, edit this parameter!
+# prompt_data = []
+usermsg = []
+
+
+def inv_md(prompt_data):
+
+    messages_API_body = {
+        "anthropic_version": "bedrock-2023-05-31", 
+        "max_tokens": int(500/0.75),
+        "messages": prompt_data
+    }
+    body = json.dumps(messages_API_body)
+    modelId = "anthropic.claude-3-haiku-20240307-v1:0"  # (Change this to try different model versions)
+    accept = "application/json"
+    contentType = "application/json"
+
+    try:
+        response = bedrock_runtime.invoke_model(
+            body=body, modelId=modelId, accept=accept, contentType=contentType
+        )
+        response_body = json.loads(response.get("body").read())
+        # response_body = json.loads(chunk.get('bytes').decode())
+
+        return response_body.get("content")[0].get("text")
+        # print(response_body)
+
+    except botocore.exceptions.ClientError as error:
+
+        if error.response['Error']['Code'] == 'AccessDeniedException':
+            print(f"\x1b[41m{error.response['Error']['Message']}\
+                    \nTo troubeshoot this issue please refer to the following resources.\
+                    \nhttps://docs.aws.amazon.com/IAM/latest/UserGuide/troubleshoot_access-denied.html\
+                    \nhttps://docs.aws.amazon.com/bedrock/latest/userguide/security-iam.html\x1b[0m\n")
+
+        else:
+            raise error
+
+
+
 
 app = Flask(__name__)
-
-vertexai.init(project=PROJECT_ID, location=LOCATION)
-# chat_model = CodeChatModel.from_pretrained(CODE_CHAT_MODEL)
-# parameters = {
-#     "candidate_count": 1,
-#     "max_output_tokens": 1024,
-#     "temperature": 0.2
-# }
-# chat = chat_model.start_chat()
-
-config = {
-    "max_output_tokens": 2048,
-    "temperature": 0.9,
-    "top_p": 1
-}
-model = GenerativeModel(CODE_CHAT_MODEL)
-chat = model.start_chat()
 
 @app.route("/")
 def home():
@@ -39,11 +56,30 @@ def home():
 @app.route("/get")
 def get_bot_response():    
     userText = request.args.get('msg')
+    usermsg.append({
+        "role":'user',
+        "content": [
+            {
+                "type": "text",
+                "text": userText
+            }
+        ]
+    })
     # response = chat.send_message(userText, **parameters) # for the bison model
-    response = chat.send_message(userText, generation_config=config) # for the gemini AI model
+    response = inv_md(usermsg) # for the gemini AI model
     # print(f"Response from Model: {response.text}")
-
-    return response.text
+    
+    usermsg.append({
+        "role":'assistant',
+        "content": [
+            {
+                "type": "text",
+                "text": response
+            }
+        ]
+        
+    })
+    return response
 
 
 
