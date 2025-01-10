@@ -6,123 +6,167 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <style>
-    * {
-        box-sizing: border-box
-    }
-    /* Set height of body and the document to 100% */
     body, html {
-        height: 100%;
-        margin: 0;
-        font-family: Arial;
+      height: 100%;
+      margin: 0;
+      font-family: "Arial", sans-serif;
+      background-color: #f4f4f9;
     }
+
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      background: white;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .panel-heading {
+      background-color: #4caf50;
+      color: white;
+      font-size: 16px;
+      padding: 10px 15px;
+    }
+
+    .panel-body {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .panel-body h1, .panel-body h4 {
+      margin: 0 0 10px;
+      color: #333;
+    }
+
     #chatbox {
-    margin-left: auto;
-    margin-right: auto;
-    width: 40%;
-    margin-top: 60px;
+      max-height: 300px;
+      overflow-y: auto;
+      padding: 15px;
+      border: 1px solid #ddd;
+      background: #f9f9f9;
+      border-radius: 5px;
+      margin: 20px 0;
     }
-    #userInput {
-    margin-left: auto;
-    margin-right: auto;
-    width: 40%;
-    margin-top: 60px;
+
+    .botText, .userText {
+      margin: 10px 0;
     }
-    #textInput {
-    width: 90%;
-    border: none;
-    border-bottom: 3px solid black;
-    font-family: monospace;
-    font-size: 17px;
-    }
-    .userText {
-    color: black;
-    font-family: monospace;
-    font-size: 17px;
-    text-align: left;
-    line-height: 30px;
-    }
-    .userText span {
-    /* background-color: #808080; */
-    /* padding: 10px; */
-    border-radius: 2px;
-    }
-    .botText {
-    color: black;
-    font-family: monospace;
-    font-size: 17px;
-    text-align: left;
-    line-height: 30px;
-    }
+
     .botText span {
-    /* background-color: #b4c0e3; */
-    /* padding: 10px; */
-    border-radius: 2px;
+      background-color: #e0f7fa;
+      color: #00796b;
+      padding: 8px 12px;
+      border-radius: 15px;
+      display: inline-block;
     }
-    #tidbit {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 300px;
+
+    .userText span {
+      background-color: #c8e6c9;
+      color: #2e7d32;
+      padding: 8px 12px;
+      border-radius: 15px;
+      display: inline-block;
+      text-align: right;
     }
-    .boxed {
-    margin-left: auto;
-    margin-right: auto;
-    width: 78%;
-    margin-top: 60px;
-    border: 1px solid green;
+
+    #userInput {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
     }
-    </style>
+
+    #textInput {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    #submitButton, #attachButton {
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+
+    #submitButton:hover, #attachButton:hover {
+      background-color: #45a049;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
-    <h1>Chatbot</h1>
-    <div class="row">
-      <div class="col-sm-12 col-lg-30">
-        <div class="panel panel-default">
-          <div class="panel-heading">Made my Moses Daudu - ML Engineer</div>
-          <div class="panel-body">
-            <h1 align="center"><b>MD's ChatBot Powered by Vertex AI</b></h1>
-            <h4 align="center"><b>Please start your personalized interaction with the chatbot</b></h4>
-            <p align="center"><img src="static\\chatbot1.png" alt="Python-BOT" height="210" width="220"></p>
-          </div>
-          <div class="boxed">
-            <div>
-                <div id="chatbox">
-                    <p class="botText">
-                        <span>Hi! What would you like to know today?</span>
-                    </p>
-                </div>
-                <div id="userInput">
-                    <input class="userText" id="textInput" type="text" name="msg" placeholder="Message" />
-                </div>
-            </div>
-            <script>
-                function getBotResponse() {
-                    var rawText = $("#textInput").val();
-                    var userHtml = '<p class="userText"><span style="color: blue;">User: </span>' + rawText + "</p>";
-                    $("#textInput").val("");
-                    $("#chatbox").append(userHtml);
-                    document
-                        .getElementById("userInput")
-                        .scrollIntoView({ block: "start", behavior: "smooth" });
-                    $.get("/get", { msg: rawText }).done(function (data) {
-                        var botHtml = '<p class="botText"><span style="color: green;">ChatBot: </span>' + data + "</p>";
-                        $("#chatbox").append(botHtml);
-                        document
-                            .getElementById("userInput")
-                            .scrollIntoView({ block: "start", behavior: "smooth" });
-                    });
-                }
-                $("#textInput").keypress(function (e) {
-                    if (e.which == 13) {
-                        getBotResponse();
-                    }
-                });
-            </script>
+    <div class="panel panel-default">
+      <div class="panel-heading">Made by Moses Daudu - ML Engineer</div>
+      <div class="panel-body">
+        <h1><b>MD's ChatBot Powered by Vertex AI</b></h1>
+        <h4><b>Start your personalized interaction with the chatbot</b></h4>
+        <img src="static\chatbot1.png" alt="Python-BOT" height="210" width="220">
+      </div>
+      <div class="panel-body">
+        <div id="chatbox">
+          <p class="botText"><span>Hi! What would you like to know today?</span></p>
         </div>
+        <div id="userInput">
+          <input id="textInput" type="text" placeholder="Type your message here..." />
+          <button id="submitButton" onclick="getBotResponse()">➤</button>
+          <button id="attachButton" onclick="document.getElementById('fileInput').click()">Attach PDF</button>
+          <input id="fileInput" type="file" accept="application/pdf" style="display: none;" onchange="uploadFile(event)" />
         </div>
       </div>
     </div>
   </div>
+
+  <script>
+    function getBotResponse() {
+      const rawText = $("#textInput").val().trim();
+      if (!rawText) return;
+
+      const userHtml = `<p class="userText"><span>User: ${rawText}</span></p>`;
+      $("#textInput").val("");
+      $("#chatbox").append(userHtml);
+
+      document.getElementById("chatbox").scrollTop = document.getElementById("chatbox").scrollHeight;
+
+      $.get("/get", { msg: rawText }).done(function (data) {
+        const botHtml = `<p class="botText"><span>ChatBot: ${data}</span></p>`;
+        $("#chatbox").append(botHtml);
+        document.getElementById("chatbox").scrollTop = document.getElementById("chatbox").scrollHeight;
+      });
+    }
+
+    function uploadFile(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const formData = new FormData();
+        formData.append("pdf", file);
+
+        fetch("/upload", {
+          method: "POST",
+          body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          const botHtml = `<p class="botText"><span>${data.message}</span></p>`;
+          $("#chatbox").append(botHtml);
+          document.getElementById("chatbox").scrollTop = document.getElementById("chatbox").scrollHeight;
+        })
+        .catch(error => {
+          console.error("Error:", error);
+        });
+      }
+    }
+
+    $("#textInput").keypress(function (e) {
+      if (e.which == 13) {
+        getBotResponse();
+      }
+    });
+  </script>
 </body>
 </html>
